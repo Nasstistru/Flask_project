@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- Оголошення типу документа як HTML і вказання мови сторінки (англійська) -->
+<head>
+    <meta charset="UTF-8"> <!-- Встановлення кодування сторінки як UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Забезпечення адаптивності сторінки на мобільних пристроях -->
+    <title>Ping Pong Game</title> <!-- Назва сторінки у вкладці браузера -->
+    <style>
+        /* Додаємо CSS стилі для сторінки */
+        body {
+            text-align: center;  /* Центрування всього тексту на сторінці */
+            background-color: #1e1e1e;  /* Темний фон сторінки */
+            color: #f5f5f5;  /* Світлий колір тексту */
+            font-family: Arial, sans-serif;  /* Шрифт для тексту */
+        }
+        canvas {
+            background-color: #000;  /* Чорний фон для canvas (ігрового поля) */
+            display: block;  /* Відображення canvas як блокового елементу */
+            margin: 20px auto;  /* Відступ згори та знизу 20px і центрування canvas */
+        }
+        h1 {
+            color: #ffcc00;  /* Золотистий колір для заголовка */
+        }
+        .navbar { /* Навігаційна панель */
+            background-color: #333;  /* Темний фон панелі */
+            overflow: hidden;  /* Приховує зайвий вміст */
+            margin-bottom: 20px;  /* Відступ знизу */
+            display: flex;  /* Використання flex-контейнера для центрування елементів */
+            justify-content: center;  /* Центрування посилань в навбарі */
+        }
+        .navbar a { /* Посилання у навбарі */
+            display: block;  /* Відображення посилання як блоку */
+            color: #f5f5f5;  /* Світлий колір тексту */
+            text-align: center;  /* Центрування тексту */
+            padding: 14px 20px;  /* Внутрішні відступи для створення кнопок */
+            text-decoration: none;  /* Прибираємо підкреслення */
+        }
+        .navbar a:hover {
+            background-color: #575757;  /* Зміна фону при наведенні */
+            color: white;  /* Білий колір тексту при наведенні */
+        }
+        #restartBtn {  /* Стиль для кнопки перезапуску гри */
+            display: none;  /* Приховуємо кнопку за замовчуванням */
+            margin-top: 20px;  /* Відступ зверху */
+            padding: 10px 20px;  /* Внутрішні відступи */
+            background-color: #ffcc00;  /* Жовтий фон */
+            border: none;  /* Прибираємо обведення */
+            color: #333;  /* Темний колір тексту */
+            cursor: pointer;  /* Курсор-рука при наведенні */
+            font-size: 1rem;  /* Розмір шрифту */
+        }
+        #restartBtn:hover {
+            background-color: #ffa500;  /* Оранжевий фон при наведенні */
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <!-- Внутрішні посилання на різні сторінки проекту -->
+    <a href="/">Генератор паролів</a>
+    <a href="/calculator">Різниця між датами</a>
+    <a href="/exchange-rates">Курс валют</a>
+    <a href="/ping-pong">Пинг Понг</a>
+    <a href="/analizator">Text Analyze</a>
+</div>
+
+<h1>Ping Pong Game</h1> <!-- Заголовок сторінки -->
+<canvas id="pongCanvas" width=800" height="420"></canvas> <!-- Ігрове поле -->
+<p id="gameOverMessage" style="color:red; font-size: 1.2rem; display: none;">Game Over!</p> <!-- Повідомлення про завершення гри -->
+<button id="restartBtn" onclick="restartGame()">Restart Game</button> <!-- Кнопка для перезапуску гри -->
+
+<script>
+    const canvas = document.getElementById("pongCanvas"); // Знаходимо canvas по ID
+    const ctx = canvas.getContext("2d"); // Отримуємо 2D-контекст для малювання
+
+    let ballRadius = 10; // Радіус м'яча
+    let x, y, dx, dy, paddleX; // Координати і швидкості м'яча, положення платформи
+    let rightPressed = false; // Чи натиснута клавіша "Вправо"
+    let leftPressed = false; // Чи натиснута клавіша "Вліво"
+    let isGameOver = false; // Чи завершено гру
+
+    const paddleHeight = 10; // Висота платформи
+    const paddleWidth = 75; // Ширина платформи
+
+    // Функція для початкового налаштування гри
+    function resetGame() {
+        x = canvas.width / 2; // Початкова позиція м'яча (по горизонталі)
+        y = canvas.height - 30; // Початкова позиція м'яча (по вертикалі)
+        dx = randomDirection(); // Початкова швидкість по горизонталі
+        dy = randomDirection(); // Початкова швидкість по вертикалі
+        paddleX = (canvas.width - paddleWidth) / 2; // Початкова позиція платформи
+        isGameOver = false; // Гра не завершена
+        document.getElementById("gameOverMessage").style.display = "none"; // Приховуємо повідомлення про завершення гри
+        document.getElementById("restartBtn").style.display = "none"; // Приховуємо кнопку перезапуску
+    }
+
+    // Функція для випадкової початкової швидкості м'яча
+    function randomDirection() {
+        return (Math.random() * 2 + 2) * (Math.random() > 0.5 ? 1 : -1); // Повертає випадкове число з мінусом чи без
+    }
+
+    // Малює м'яч на canvas
+    function drawBall() {
+        ctx.beginPath(); // Початок малювання м'яча
+        ctx.arc(x, y, ballRadius, 0, Math.PI * 2); // Малюємо круг (м'яч)
+        ctx.fillStyle = "#ffcc00"; // Колір м'яча
+        ctx.fill(); // Заповнюємо колом
+        ctx.closePath(); // Закриваємо малювання м'яча
+    }
+
+    // Малює платформу для м'яча
+    function drawPaddle() {
+        ctx.beginPath(); // Початок малювання платформи
+        ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight); // Малюємо прямокутник (платформа)
+        ctx.fillStyle = "#ffcc00"; // Колір платформи
+        ctx.fill(); // Заповнюємо платформу кольором
+        ctx.closePath(); // Закриваємо малювання платформи
+    }
+
+    // Рух платформи в залежності від натиснутих клавіш
+    function movePaddle() {
+        if (rightPressed && paddleX < canvas.width - paddleWidth) {
+            paddleX += 7; // Рух праворуч
+        } else if (leftPressed && paddleX > 0) {
+            paddleX -= 7; // Рух ліворуч
+        }
+    }
+
+    // Обробка натискання клавіші
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
+
+    function keyDownHandler(e) {
+        if (e.key === "Right" || e.key === "ArrowRight") {
+            rightPressed = true; // Встановлюємо стан "праворуч натиснуто"
+        } else if (e.key === "Left" || e.key === "ArrowLeft") {
+            leftPressed = true; // Встановлюємо стан "ліворуч натиснуто"
+        }
+    }
+
+    function keyUpHandler(e) {
+        if (e.key === "Right" || e.key === "ArrowRight") {
+            rightPressed = false; // Скидаємо стан "праворуч натиснуто"
+        } else if (e.key === "Left" || e.key === "ArrowLeft") {
+            leftPressed = false; // Скидаємо стан "ліворуч натиснуто"
+        }
+    }
+
+    // Додаємо подію для клавіші "Пробіл" для перезапуску гри
+    document.addEventListener("keydown", function(e) {
+        if (e.code === "Space") {
+            restartGame(); // Викликаємо перезапуск гри
+        }
+    });
+
+    // Виявлення зіткнень м'яча зі стінами і платформою
+    function collisionDetection() {
+        if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+            dx = randomDirection();  // Зміна напрямку при зіткненні зі стінами
+        }
+        if (y + dy < ballRadius) {
+            dy = randomDirection();  // Зміна напрямку при зіткненні з верхньою стіною
+        } else if (y + dy > canvas.height - ballRadius) {
+            if (x > paddleX && x < paddleX + paddleWidth) {
+                dy = randomDirection();  // Зміна напрямку при зіткненні з платформою
+            } else {
+                isGameOver = true; // Позначення завершення гри
+                document.getElementById("gameOverMessage").style.display = "block"; // Показуємо повідомлення про завершення
+                document.getElementById("restartBtn").style.display = "inline-block"; // Показуємо кнопку для перезапуску гри
+                cancelAnimationFrame(animationFrame); // Зупинка анімації
+            }
+        }
+    }
+
+    // Малювання і оновлення позицій елементів гри
+    function draw() {
+        if (isGameOver) return; // Зупиняємо гру при завершенні
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо canvas
+        drawBall(); // Малюємо м'яч
+        drawPaddle(); // Малюємо платформу
+        movePaddle(); // Переміщуємо платформу
+        collisionDetection(); // Виявляємо зіткнення
+
+        x += dx; // Оновлення координати X м'яча
+        y += dy; // Оновлення координати Y м'яча
+
+        animationFrame = requestAnimationFrame(draw); // Запуск нової анімації
+    }
+
+    function restartGame() {
+        resetGame(); // Викликаємо скидання налаштувань гри
+        requestAnimationFrame(draw); // Початок анімації
+    }
+
+    resetGame(); // Скидаємо налаштування гри перед початком
+    let animationFrame = requestAnimationFrame(draw); // Запускаємо анімацію для гри
+</script>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <!-- Устанавливаем кодировку и масштабирование страницы -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Різниця між датами</title>
+    <style>
+        /* Основные стили для оформления страницы */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+        /* Стили для навигационной панели */
+        .navbar {
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Стили для ссылок в навигационной панели */
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 0 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        /* Изменение цвета ссылки при наведении */
+        .navbar a:hover {
+            background-color: #575757;
+        }
+
+        /* Стили для контейнера */
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        /* Заголовок страницы */
+        h1 {
+            font-size: 24px;
+            color: #ffffff;
+        }
+
+        /* Стили для меток формы */
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+            color: #ffffff;
+        }
+
+        /* Стили для полей ввода даты и кнопки */
+        input[type="date"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #3c3c3c;
+            color: #ffffff;
+        }
+
+        /* Стили для кнопки */
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Изменение цвета кнопки при наведении */
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Стили для отображения результата */
+        .result {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигационная панель с ссылками на другие страницы -->
+    <div class="navbar">
+        <a href="/">Генератор паролів</a>
+        <a href="/calculator">Різниця між датами</a>
+        <a href='/exchange-rates'>Курс валют</a>
+        <a href="/ping-pong">Пинг понг</a>
+        <a href="/analizator">Text Analyze</a>
+    </div>
+
+    <!-- Основной контейнер для калькулятора разницы между датами -->
+    <div class="container">
+        <h1>Скільки років, місяців, днів між датами?</h1>
+        <form id="dateForm">
+            <!-- Поле для ввода начальной даты -->
+            <label for="start">Введіть початкову дату:</label>
+            <input type="date" id="start" required>
+
+            <!-- Поле для ввода конечной даты -->
+            <label for="end">Введіть кінцеву дату:</label>
+            <input type="date" id="end" required>
+
+            <!-- Кнопка для запуска вычислений -->
+            <button type="submit">Обчислити</button>
+        </form>
+
+        <!-- Элемент для вывода результата -->
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Добавляем обработчик событий на форму для предотвращения отправки по умолчанию
+        document.getElementById('dateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Получаем значения начальной и конечной даты из полей
+            const startDate = new Date(document.getElementById('start').value);
+            const endDate = new Date(document.getElementById('end').value);
+
+            // Проверяем, что начальная дата не позже конечной
+            if (startDate > endDate) {
+                alert("Початкова дата не може бути пізнішою за кінцеву.");
+                return;
+            }
+
+            // Рассчитываем разницу в годах, месяцах и днях
+            let years = endDate.getFullYear() - startDate.getFullYear();
+            let months = endDate.getMonth() - startDate.getMonth();
+            let days = endDate.getDate() - startDate.getDate();
+
+            // Корректируем дни, если они отрицательные
+            if (days < 0) {
+                months--;
+                const lastDayPrevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
+                days += lastDayPrevMonth;
+            }
+
+            // Корректируем месяцы, если они отрицательные
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // Выводим результат в элемент с id "result"
+            document.getElementById('result').innerHTML = `Між датами: <strong>${years}</strong> років, <strong>${months}</strong> місяців, <strong>${days}</strong> днів.`;
+        });
+    </script>
+</body>
+</html>

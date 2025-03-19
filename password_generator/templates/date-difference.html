@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Різниця між датами</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <a href="/">Генератор паролів</a>
+        <a href="/calculator">Калькулятор</a>
+        <a href="/date-difference">Різниця між датами</a>
+    </div>
+
+    <div class="container">
+        <h1>Різниця між датами</h1>
+        <form method="POST">
+            <label for="start_date">Початкова дата:</label>
+            <input type="date" id="start_date" name="start_date" required>
+
+            <label for="end_date">Кінцева дата:</label>
+            <input type="date" id="end_date" name="end_date" required>
+
+            <button type="submit">Обчислити різницю</button>
+        </form>
+
+        {% if years is not none %}
+        <div class="result-box">
+            <h3>Різниця:</h3>
+            <p>{{ years }} років, {{ months }} місяців, {{ days }} днів</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

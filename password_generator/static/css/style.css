@@ -1,0 +1,180 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #333;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #444;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="number"], button, input[type="checkbox"], input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.password-box {
+    margin-top: 20px;
+    background-color: #fafafa;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.password-box p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    word-wrap: break-word;
+}
+
+#copy-btn {
+    background-color: #007BFF;
+    color: white;
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+#copy-btn:hover {
+    background-color: #0056b3;
+}
+
+.calculator {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+    margin-top: 20px;
+}
+
+.calculator input[type="text"] {
+    grid-column: span 4;
+    padding: 10px;
+    font-size: 24px;
+    text-align: right;
+}
+
+.calculator button {
+    padding: 20px;
+    font-size: 18px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.calculator button:hover {
+    background-color: #ddd;
+}
+
+.calculator .zero {
+    grid-column: span 2;
+}
+
+
+#strength-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    margin-top: 20px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#strength-fill {
+    height: 100%;
+    width: 0;
+    background-color: red;
+    transition: width 0.3s ease;
+}
+
+@media (max-width: 600px) {
+    .container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    button {
+        padding: 10px;
+    }
+
+    input[type="number"] {
+        padding: 10px;
+    }
+
+    .calculator button {
+        padding: 15px;
+    }
+}
